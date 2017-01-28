@@ -1,9 +1,15 @@
 {
   "name": "redux-blog",
   "version": "1.0.0",
+  "description": "Redux blog with React and Babel support",
   "main": "index.js",
-  "repository": {},
+  "repository": "git@github.com:binhxn/redux-blog.git",
   "license": "MIT",
+  "scripts": {
+    "start": "node ./node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --open",
+    "test": "mocha --compilers js:babel-core/register --require ./test/test_helper.js --recursive ./test",
+    "test:watch": "npm run test -- --watch"
+  },
   "devDependencies": {
     "babel-core": "^6.2.1",
     "babel-loader": "^6.2.0",

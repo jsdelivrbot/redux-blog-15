@@ -5,7 +5,7 @@ import { Field, reduxForm } from 'redux-form';
 import { createPost } from '../actions/index';
 import validate from '../reducers/validate';
 
-const renderField = field =>   // Define stateless component to render input and errors
+const renderField = field =>  // Define stateless component to render input and errors
   <div>
     <input {...field.input} className="form-control" type={field.type}/>
     {field.meta.touched &&

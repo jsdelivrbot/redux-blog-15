@@ -1,28 +1,32 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
+import validateAuth from '../reducers/validate_auth';
+import * as actions from '../actions'
 
 
 const signInFields = field =>  // Define stateless component to render input and errors
   <div>
     <input {...field.input} className="form-control" type={field.type}/>
-    {field.meta.touched &&
-     field.meta.error &&
-     <div className={`text-help ${field.meta.error ? 'error-text' : ''}`}>{field.meta.error}</div>}
+    {field.touched &&
+     field.error &&
+     <div className={`text-help ${field.error ? 'error-text' : ''}`}>{field.error}</div>}
   </div>
 
 
 class Signin extends Component {
   handleSignin({ email, password }) {
-    console.log(email, password)
+    console.log(email, password);
+
+    this.props.signInUser({ email, password });
   }
 
   render() {
-    const { handleSubmit, fields: { email, password} } = this.props;
+    const { handleSubmit } = this.props;
 
     return (
-      <form>
-        <fieldset onSubmit={handleSubmit(this.handleSignin.bind(this))} className="form-group">
+      <form onSubmit={handleSubmit(this.handleSignin.bind(this))}>
+        <fieldset className="form-group">
           <label>Email:</label>
           <Field
             className="form-control"
@@ -38,13 +42,18 @@ class Signin extends Component {
             type="text"
             component={signInFields}/>
         </fieldset>
-        <button action="submit" className="btn btn-primary">Sign In</button>
+        <button type="submit" className="btn btn-primary">Sign In</button>
       </form>
     );
   }
 }
 
-export default reduxForm({
+export default connect(null, actions)(reduxForm({
   form: 'signin',
-  fields: ['email', 'password']
-})(Signin);
+  validateAuth
+})(Signin));
+
+// export default reduxForm({
+//   form: 'signin',
+//   validateAuth
+// })(Signin);

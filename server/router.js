@@ -9,7 +9,7 @@ const requireSignin = passport.authenticate('local', { session: false });
 module.exports = function(app) {
   // When testing in Postman, add 'JWT ' before your token in Authorization header
   app.get('/', requireAuth, (req, res) => {
-    res.send({ hi: 'there' })
+    res.send({ message: 'Super secret code is ABC123' })
   });
   app.post('/signin', requireSignin, Authentication.signin);
   app.post('/signup', Authentication.signup);

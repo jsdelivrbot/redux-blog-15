@@ -1,11 +1,14 @@
 import axios from 'axios';
+import { browserHistory } from 'react-router';
 
 export const FETCH_POST = 'FETCH_POST';
 export const FETCH_POSTS = 'FETCH_POSTS';
-// export const FETCH_POSTS_SUCCESS = 'FETCH_POSTS_SUCCESS';
-// export const FETCH_POSTS_FAILURE = 'FETCH_POSTS_FAILURE';
 export const CREATE_POST = 'CREATE_POST';
 export const DELETE_POST = 'DELETE_POST';
+
+export const AUTH_USER = 'AUTH_USER'
+export const UNAUTH_USER = 'UNAUTH_USER';
+export const AUTH_ERROR = 'AUTH_ERROR';
 
 
 const ROOT_URL = 'http://reduxblog.herokuapp.com/api';
@@ -48,34 +51,32 @@ export function deletePost(id) {
   }
 }
 
-// export function fetchPostsSuccess(posts) {
-//   return {
-//     type: FETCH_POSTS_SUCCESS,
-//     payload: posts
-//   }
-// }
-
-// export function fetchPostsFailure(error) {
-//   return {
-//     type: FETCH_POSTS_FAILURE,
-//     payload: posts
-//   }
-// }
-
 export function signInUser({ email, password }) {
   // With redux-thunk, we can return many actions, not just one per action creator
   // Returns the function gives us direct access to the Dispatch method
   return function(dispatch) {
     //Submit email/password to server
     axios.post(`${API_URL}/signin`, { email, password })
+      .then(response => {
+        // If request is good...
+        // - Update state to indicate user is authenticated
+        dispatch({ type: AUTH_USER });
+        // - Save the JWT token
+        localStorage.setItem('token', response.data.token);
+        // - Redirect to the route './feature'
+        browserHistory.push('/feature');
+      })
+      .catch(() => {
+        // If request is bad...
+        // - Show an error to the user
+        dispatch(authError('Bad Login Info'))
+      });
+  }
+}
 
-    // If request is good...
-    // - Update state to indicate user is authenticated
-    // - Save the JWT token
-    // - Redirect to the route './feature'
-
-    // If request is bad...
-    // - Show an error to the user
-    
+export function authError(error) {
+  return {
+    type: AUTH_ERROR,
+    payload: error
   }
 }
